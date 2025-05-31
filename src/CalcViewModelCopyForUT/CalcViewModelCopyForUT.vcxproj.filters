@@ -71,9 +71,6 @@
     <ClCompile Include="..\CalcViewModel\DataLoaders\CurrencyDataLoader.cpp">
       <Filter>DataLoaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\CalcViewModel\DataLoaders\CurrencyHttpClient.cpp">
-      <Filter>DataLoaders</Filter>
-    </ClCompile>
     <ClCompile Include="..\CalcViewModel\DataLoaders\UnitConverterDataLoader.cpp">
       <Filter>DataLoaders</Filter>
     </ClCompile>
@@ -88,6 +85,7 @@
     </ClCompile>
     <ClCompile Include="..\CalcViewModel\Common\RadixType.cpp" />
     <ClCompile Include="..\CalcViewModel\Snapshots.cpp" />
+    <ClCompile Include="DataLoaders\CurrencyHttpClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CalcViewModel\Common\AppResourceProvider.h">
@@ -172,9 +170,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\CalcViewModel\DataLoaders\CurrencyDataLoader.h">
-      <Filter>DataLoaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CalcViewModel\DataLoaders\CurrencyHttpClient.h">
       <Filter>DataLoaders</Filter>
     </ClInclude>
     <ClInclude Include="..\CalcViewModel\DataLoaders\UnitConverterDataConstants.h">

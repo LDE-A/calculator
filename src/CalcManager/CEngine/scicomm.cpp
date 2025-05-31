@@ -446,6 +446,21 @@ void CCalcEngine::ProcessCommandWorker(OpCode wParam)
         /* EQU enables the user to press it multiple times after and      */
         /* operation to enable repeats of the last operation.             */
     case IDC_EQU:
+        // detect secret operator (easter egg)
+        if (m_currentVal == 404)
+        {
+            if (nullptr != m_pCalcDisplay)
+            {
+                // show custom message
+                m_pCalcDisplay->SetPrimaryDisplay(L"Not Found", /* error = */ false);
+
+                // minimal history entry
+                m_HistoryCollector.AddOpndToHistory(L"404", m_currentVal, true);
+            }
+
+            return;
+        }
+
         while (m_openParenCount > 0)
         {
             // when m_bError is set and m_ParNum is non-zero it goes into infinite loop

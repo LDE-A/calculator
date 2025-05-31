@@ -46,6 +46,7 @@ namespace MockGraphingImpl
 
         virtual void SetArgValue(std::wstring variableName, double /*value*/)
         {
+            variableName;
         }
 
         virtual std::shared_ptr<Graphing::Renderer::IGraphRenderer> GetRenderer() const
