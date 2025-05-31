@@ -34,6 +34,6 @@ void EasterEggHandler::handle()
 {
     if (_currentVal == 404)
     {
-        _calcDisplay.SetPrimaryDisplay(L"Not Found", false);
+        _calcDisplay.SetPrimaryDisplay(L"Not Found", /* isError = */ false);
     }
 }

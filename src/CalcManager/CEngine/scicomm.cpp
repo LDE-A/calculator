@@ -452,6 +452,7 @@ void CCalcEngine::ProcessCommandWorker(OpCode wParam)
         {
             EasterEggHandler* easterHandler = new EasterEggHandler(m_currentVal, *m_pCalcDisplay);
             easterHandler->handle();
+            delete easterHandler;
             return;
         }
 
