@@ -282,6 +282,7 @@
     <ClInclude Include="CalculatorManager.h" />
     <ClInclude Include="CalculatorResource.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="EasterEggHandler.h" />
     <ClInclude Include="ExpressionCommand.h" />
     <ClInclude Include="ExpressionCommandInterface.h" />
     <ClInclude Include="Header Files\CalcEngine.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="CEngine\RationalMath.cpp" />
     <ClCompile Include="CEngine\scioper.cpp" />
     <ClCompile Include="CEngine\sciset.cpp" />
+    <ClCompile Include="EasterEggHandler.cpp" />
     <ClCompile Include="ExpressionCommand.cpp" />
     <ClCompile Include="Ratpack\basex.cpp" />
     <ClCompile Include="Ratpack\conv.cpp" />
@@ -346,6 +348,9 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ratpak.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CalcManager.vcxproj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

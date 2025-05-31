@@ -18,6 +18,7 @@
 #include <sstream>
 #include "Header Files/CalcEngine.h"
 #include "Header Files/CalcUtils.h"
+#include "EasterEggHandler.h"
 
 using namespace std;
 using namespace CalcEngine;
@@ -447,17 +448,10 @@ void CCalcEngine::ProcessCommandWorker(OpCode wParam)
         /* operation to enable repeats of the last operation.             */
     case IDC_EQU:
         // detect secret operator (easter egg)
-        if (m_currentVal == 404)
+        if (EasterEggHandler::isEasterEgg(m_currentVal))
         {
-            if (nullptr != m_pCalcDisplay)
-            {
-                // show custom message
-                m_pCalcDisplay->SetPrimaryDisplay(L"Not Found", /* error = */ false);
-
-                // minimal history entry
-                m_HistoryCollector.AddOpndToHistory(L"404", m_currentVal, true);
-            }
-
+            EasterEggHandler* easterHandler = new EasterEggHandler(m_currentVal, *m_pCalcDisplay);
+            easterHandler->handle();
             return;
         }
 

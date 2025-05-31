@@ -90,6 +90,9 @@
       <Filter>CEngine</Filter>
     </ClCompile>
     <ClCompile Include="NumberFormattingUtils.cpp" />
+    <ClCompile Include="EasterEggHandler.cpp">
+      <Filter>CEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Command.h" />
@@ -161,6 +164,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NumberFormattingUtils.h" />
+    <ClInclude Include="EasterEggHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ratpak.natvis">
