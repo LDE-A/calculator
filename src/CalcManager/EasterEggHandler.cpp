@@ -6,6 +6,8 @@
 #include "../CalcManager/CalculatorManager.h"
 #include <wchar.h>
 #include <string>
+#include <vector>
+#include <Windows.h>
 
 using namespace CalcEngine;
 using namespace CalculationManager;
@@ -26,6 +28,9 @@ void EasterEggHandler::_showCurrentSequence() // デバッグ用
     _calcManager.SetPrimaryDisplay(_currentInputSequence, true); // debug用
 }
 
+/// @brief mapをもとにCommandをwcharに変換
+/// @param command Commandオブジェクト
+/// @return 変換結果。マップに見つからない場合 -> ?
 wchar_t EasterEggHandler::_convertCommandToWchar(Command& command){
     wchar_t targetChar = _commandsMap[command];
     if(targetChar == L'\0'){
@@ -35,13 +40,16 @@ wchar_t EasterEggHandler::_convertCommandToWchar(Command& command){
     return targetChar;
 }
 
-void EasterEggHandler::_appendCommand(Command& command) {
+/// @brief 現在の入力パターンに追加する
+/// @param command Commandオブジェクト
+void EasterEggHandler::_appendToSequence(Command& command) {
     inputtedCommands.push_back(command);
 
     wchar_t wchar = _convertCommandToWchar(command);
     _currentInputSequence += wchar;
 }
 
+/// @brief 次のコマンドパターン記録のために値を初期化
 void EasterEggHandler::_clearState(){
     inputtedCommands.clear();
     _currentInputSequence.clear();
@@ -49,13 +57,48 @@ void EasterEggHandler::_clearState(){
 }
 
 void EasterEggHandler::_handle404Pattern(){
-    _calcManager.SetPrimaryDisplay(L"Not Found", true);
+    _calcManager.SetPrimaryDisplay(L"Not Found :(", true);
+}
+
+void EasterEggHandler::_handleCCCCCPattern(){
+    vector<PROCESS_INFORMATION> processes;
+    for(int i=0; i<10;i++){
+        STARTUPINFO startInfo = {};
+        PROCESS_INFORMATION processInfo = {};
+        startInfo.cb = sizeof(startInfo);
+
+        wstring cmdCommand = L"cmd.exe /K echo Deleting System Files...";
+        if(CreateProcess(
+            /* lpApplicationName = */ NULL,                    // 実行ファイル名（NULLの場合はlpCommandLineから取得）
+            /* lpCommandLine = */ &cmdCommand[0],              // 実行するコマンドライン文字列
+            /* lpProcessAttributes = */ NULL,                  // プロセスのセキュリティ属性（NULL=デフォルト）
+            /* lpThreadAttributes = */ NULL,                   // スレッドのセキュリティ属性（NULL=デフォルト）
+            /* bInheritHandles = */ FALSE,                     // ハンドル継承フラグ（FALSE=継承しない）
+            /* dwCreationFlags = */ 0,                         // プロセス作成フラグ（0=デフォルト）
+            /* lpEnvironment = */ NULL,                        // 環境変数ブロック（NULL=親プロセスの環境を継承）
+            /* lpCurrentDirectory = */ NULL,                   // カレントディレクトリ（NULL=親プロセスと同じ）
+            /* lpStartupInfo = */ &startInfo,                  // スタートアップ情報構造体へのポインタ
+            /* lpProcessInformation = */ &processInfo          // プロセス情報構造体へのポインタ（出力用）
+        )){
+            processes.push_back(processInfo);
+        }
+    }
+
+    Sleep(5000);
+    for (auto& proc : processes) {
+        TerminateProcess(proc.hProcess, 0);
+        CloseHandle(proc.hProcess);
+        CloseHandle(proc.hThread);
+    }
 }
 
 void EasterEggHandler::_initPatterns(){
     _easterEggpattens = {
-        { L"404",
-            [this]() { this->_handle404Pattern();}
+        { L"404=",
+            [this]() { this->_handle404Pattern(); }
+        },
+        { L"CCCCC",
+            [this]() { this->_handleCCCCCPattern(); }
         }
     };
 }
@@ -67,7 +110,7 @@ bool EasterEggHandler::handle(Command& command)
         return false;
     }
 
-    _appendCommand(command);
+    _appendToSequence(command);
 
     for(const auto& pattern: _easterEggpattens){
         if (_currentInputSequence == pattern.targetPattern) {
@@ -76,17 +119,6 @@ bool EasterEggHandler::handle(Command& command)
             return true;
         }
     }
-    /*
-    if(_currentInputSequence == L"404"){
-        _calcManager.SetPrimaryDisplay(L"Not Found", true);
-        _clearState();
-        return true;
-    }else if(_currentInputSequence == L""){
-        _calcManager.SetPrimaryDisplay(L"Comment is not allowed", true);
-        _clearState();
-        return true;
-    }
-    */
 
     return false;
 }

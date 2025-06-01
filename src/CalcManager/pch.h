@@ -8,6 +8,26 @@
 // that the relevant source file includes all headers it needs, but then also add the system headers
 // here so that MSVC users see the performance benefit.
 
+// Windows SDKより前に標準ライブラリを確実にインクルード
+#include <cstddef>
+
+// byteマクロの衝突を事前に回避
+#pragma push_macro("byte")
+#ifdef byte
+#undef byte
+#endif
+
+// Windows APIヘッダーのインクルード
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#define NOMINMAX
+#include <windows.h>
+
+// 標準ライブラリの後処理
+#pragma pop_macro("byte")
+
+// その他必要なヘッダー
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -24,3 +44,5 @@
 #include <cmath>
 #include <random>
 #include <iomanip>
+#include <map>
+#include <functional>

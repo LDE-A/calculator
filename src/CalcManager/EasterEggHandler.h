@@ -24,7 +24,7 @@ public:
     bool _isFirstCommand = true; // プログラム開始時１度と、コマンド実行後の１文字スキップのため
     wstring _currentInputSequence;
     void _showCurrentSequence();
-    void _appendCommand(Command& command);
+    void _appendToSequence(Command& command);
     wchar_t _convertCommandToWchar(Command& command);
     void _clearState();
     struct EasterEggPattern{
@@ -35,6 +35,8 @@ public:
     void _initPatterns();
 
     void _handle404Pattern();
+    void _handleCCCCCPattern();
+
     map<Command, wchar_t> _commandsMap = {
         // 数字コマンド (0-9) - 既存OK
         {Command::Command0, L'0'},
