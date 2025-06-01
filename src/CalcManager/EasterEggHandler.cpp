@@ -10,24 +10,24 @@
 using namespace CalcEngine;
 using namespace CalculationManager;
 
-void EasterEggHandler::_convertListToStrPattern() // デバッグ用
+void EasterEggHandler::_showCurrentSequence() // デバッグ用
 {
     int i = 0;
-    for (i = 0; i < commands_lists.size(); i++) {
-        auto it = _commandToWCharMap.find(commands_lists[i]);
-        if (it != _commandToWCharMap.end()) {
-            _strPattern[i] = it->second;
+    for (i = 0; i < inputtedCommands.size(); i++) {
+        auto it = _commandsMap.find(inputtedCommands[i]);
+        if (it != _commandsMap.end()) {
+            _currentInputSequence[i] = it->second;
         } else {
             // 未定義コマンドの場合はスキップまたはデフォルト文字を使用
-            _strPattern[i] = L'?';  // またはcontinueでスキップ
+            _currentInputSequence[i] = L'?';  // またはcontinueでスキップ
         }
     }
-    _strPattern[i] = L'\0';
-    _calcManager.SetPrimaryDisplay(_strPattern, true); // debug用
+    _currentInputSequence[i] = L'\0';
+    _calcManager.SetPrimaryDisplay(_currentInputSequence, true); // debug用
 }
 
 wchar_t EasterEggHandler::_convertCommandToWchar(Command& command){
-    wchar_t targetChar = _commandToWCharMap[command];
+    wchar_t targetChar = _commandsMap[command];
     if(targetChar == L'\0'){
         targetChar = L'?';
     }
@@ -36,15 +36,15 @@ wchar_t EasterEggHandler::_convertCommandToWchar(Command& command){
 }
 
 void EasterEggHandler::_appendCommand(Command& command) {
-    commands_lists.push_back(command);
+    inputtedCommands.push_back(command);
 
     wchar_t wchar = _convertCommandToWchar(command);
-    _strPattern += wchar;
+    _currentInputSequence += wchar;
 }
 
-void EasterEggHandler::_prepareForNext(){
-    commands_lists.clear();
-    _strPattern.clear();
+void EasterEggHandler::_clearState(){
+    inputtedCommands.clear();
+    _currentInputSequence.clear();
     _isFirstCommand = true;  // イースターエッグから抜けるときのボタンプレス(1コマンド)をスキップするため
 }
 
@@ -57,13 +57,13 @@ bool EasterEggHandler::handle(Command& command)
 
     _appendCommand(command);
 
-    if(_strPattern == L"404"){
+    if(_currentInputSequence == L"404"){
         _calcManager.SetPrimaryDisplay(L"Not Found", true);
-        _prepareForNext();
+        _clearState();
         return true;
-    }else if(_strPattern == L"/**/"){
+    }else if(_currentInputSequence == L"/**/"){
         _calcManager.SetPrimaryDisplay(L"Comment is not allowed", true);
-        _prepareForNext();
+        _clearState();
         return true;
     }
 
@@ -73,21 +73,5 @@ bool EasterEggHandler::handle(Command& command)
 EasterEggHandler::EasterEggHandler(CalculationManager::CalculatorManager& calcManager) :
     _calcManager(calcManager)
 {
-    _strPattern.clear();
+    _currentInputSequence.clear();
 }
-
-    /* if (_currentVal == 404)
-    {
-        _calcDisplay.SetPrimaryDisplay(L"Not Found", false);
-    } // 壁紙変更
-    */
-
-/*
- m_easterEggHandler->commands_lists.push_back(cmdenum);
-    if (m_easterEggHandler->commands_lists.size() > 2 && m_easterEggHandler->commands_lists[1] == Command::Command1 && m_easterEggHandler->commands_lists[2] ==
- Command::Command1)
-    {
-        m_standardCalculatorManager.Reset();
-        m_easterEggHandler->commands_lists.clear();
-        return;
-    }*/
