@@ -648,11 +648,21 @@ bool StandardCalculatorViewModel::IsOperator(Command cmdenum)
     return true;
 }
 
+static vector<Command> commands_lists = {}; // 最初に1個謎のコマンドが入る
+
 void StandardCalculatorViewModel::OnButtonPressed(Object ^ parameter)
 {
     m_feedbackForButtonPress = CalculatorButtonPressedEventArgs::GetAuditoryFeedbackFromCommandParameter(parameter);
     NumbersAndOperatorsEnum numOpEnum = CalculatorButtonPressedEventArgs::GetOperationFromCommandParameter(parameter);
     Command cmdenum = ConvertToOperatorsEnum(numOpEnum);
+
+    commands_lists.push_back(cmdenum);
+    if (commands_lists.size() > 2 && commands_lists[1] == Command::Command1 && commands_lists[2] == Command::Command1)
+    {
+        m_standardCalculatorManager.Reset();
+        commands_lists.clear();
+        return;
+    }
 
     if (IsInError)
     {

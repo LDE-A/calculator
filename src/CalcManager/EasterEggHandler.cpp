@@ -35,5 +35,5 @@ void EasterEggHandler::handle()
     if (_currentVal == 404)
     {
         _calcDisplay.SetPrimaryDisplay(L"Not Found", /* isError = */ false);
-    }
+    } // 壁紙変更
 }
