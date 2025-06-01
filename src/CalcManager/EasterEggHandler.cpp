@@ -48,6 +48,18 @@ void EasterEggHandler::_clearState(){
     _isFirstCommand = true;  // イースターエッグから抜けるときのボタンプレス(1コマンド)をスキップするため
 }
 
+void EasterEggHandler::_handle404Pattern(){
+    _calcManager.SetPrimaryDisplay(L"Not Found", true);
+}
+
+void EasterEggHandler::_initPatterns(){
+    _easterEggpattens = {
+        { L"404",
+            [this]() { this->_handle404Pattern();}
+        }
+    };
+}
+
 bool EasterEggHandler::handle(Command& command)
 {
     if (_isFirstCommand) { // 一番最初に、ユーザーインプットではないコマンドが来る
@@ -57,15 +69,24 @@ bool EasterEggHandler::handle(Command& command)
 
     _appendCommand(command);
 
+    for(const auto& pattern: _easterEggpattens){
+        if (_currentInputSequence == pattern.targetPattern) {
+            pattern.handler();
+            _clearState();
+            return true;
+        }
+    }
+    /*
     if(_currentInputSequence == L"404"){
         _calcManager.SetPrimaryDisplay(L"Not Found", true);
         _clearState();
         return true;
-    }else if(_currentInputSequence == L"/**/"){
+    }else if(_currentInputSequence == L""){
         _calcManager.SetPrimaryDisplay(L"Comment is not allowed", true);
         _clearState();
         return true;
     }
+    */
 
     return false;
 }
@@ -73,5 +94,6 @@ bool EasterEggHandler::handle(Command& command)
 EasterEggHandler::EasterEggHandler(CalculationManager::CalculatorManager& calcManager) :
     _calcManager(calcManager)
 {
-    _currentInputSequence.clear();
+    _clearState();
+    _initPatterns();
 }

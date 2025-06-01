@@ -27,6 +27,14 @@ public:
     void _appendCommand(Command& command);
     wchar_t _convertCommandToWchar(Command& command);
     void _clearState();
+    struct EasterEggPattern{
+        wstring targetPattern;
+        function<void()> handler;
+    };
+    vector<EasterEggPattern> _easterEggpattens;
+    void _initPatterns();
+
+    void _handle404Pattern();
     map<Command, wchar_t> _commandsMap = {
         // 数字コマンド (0-9) - 既存OK
         {Command::Command0, L'0'},
