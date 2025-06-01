@@ -8,6 +8,7 @@
 #include "Common/LocalizationSettings.h"
 #include "Common/CopyPasteManager.h"
 #include "Common/TraceLogger.h"
+#include "../CalcManager/EasterEggHandler.h"
 
 using namespace CalculatorApp;
 using namespace CalculatorApp::ViewModel::Common;
@@ -648,7 +649,6 @@ bool StandardCalculatorViewModel::IsOperator(Command cmdenum)
     return true;
 }
 
-static vector<Command> commands_lists = {}; // 最初に1個謎のコマンドが入る
 
 void StandardCalculatorViewModel::OnButtonPressed(Object ^ parameter)
 {
@@ -656,11 +656,9 @@ void StandardCalculatorViewModel::OnButtonPressed(Object ^ parameter)
     NumbersAndOperatorsEnum numOpEnum = CalculatorButtonPressedEventArgs::GetOperationFromCommandParameter(parameter);
     Command cmdenum = ConvertToOperatorsEnum(numOpEnum);
 
-    commands_lists.push_back(cmdenum);
-    if (commands_lists.size() > 2 && commands_lists[1] == Command::Command1 && commands_lists[2] == Command::Command1)
+    bool isEasterEgg = m_easterEggHandler->handle(cmdenum);
+    if (isEasterEgg)
     {
-        m_standardCalculatorManager.Reset();
-        commands_lists.clear();
         return;
     }
 

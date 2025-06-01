@@ -14,6 +14,8 @@
 #include "MemoryItemViewModel.h"
 #include "Snapshots.h"
 
+#include "../CalcManager/EasterEggHandler.h"
+
 namespace CalculatorUnitTests
 {
     class MultiWindowUnitTests;
@@ -384,6 +386,7 @@ namespace CalculatorApp
 
             friend class CalculatorApp::ViewModel::Common::CalculatorDisplay;
             friend class CalculatorUnitTests::MultiWindowUnitTests;
+            EasterEggHandler* m_easterEggHandler = new EasterEggHandler(m_standardCalculatorManager);
         };
     }
 }

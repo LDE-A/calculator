@@ -18,7 +18,6 @@
 #include <sstream>
 #include "Header Files/CalcEngine.h"
 #include "Header Files/CalcUtils.h"
-#include "EasterEggHandler.h"
 
 using namespace std;
 using namespace CalcEngine;
@@ -447,14 +446,14 @@ void CCalcEngine::ProcessCommandWorker(OpCode wParam)
         /* EQU enables the user to press it multiple times after and      */
         /* operation to enable repeats of the last operation.             */
     case IDC_EQU:
-        // detect secret operator (easter egg)
+        /* detect secret operator(easter egg)
         if (EasterEggHandler::isEasterEgg(m_currentVal))
         {
             EasterEggHandler* easterHandler = new EasterEggHandler(m_currentVal, *m_pCalcDisplay);
             easterHandler->handle();
             delete easterHandler;
             return;
-        }
+        } */
 
         while (m_openParenCount > 0)
         {
