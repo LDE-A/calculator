@@ -22,8 +22,12 @@ public:
 private:
     CalculatorManager& _calcManager;
     bool _isFirstCommand = true; // プログラム開始時１度と、コマンド実行後の１文字スキップのため
-    wchar_t _strPattern[100]; // パターンを保存する
+    //wchar_t _strPattern[100]; // パターンを保存する
+    wstring _strPattern;
     void _convertListToStrPattern();
+    void _appendCommand(Command& command);
+    wchar_t _convertCommandToWchar(Command& command);
+    void _prepareForNext();
     map<Command, wchar_t> _commandToWCharMap = {
         // 数字コマンド (0-9) - 既存OK
         { Command::Command0, L'0' },

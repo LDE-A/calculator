@@ -10,7 +10,7 @@
 using namespace CalcEngine;
 using namespace CalculationManager;
 
-void EasterEggHandler::_convertListToStrPattern()
+void EasterEggHandler::_convertListToStrPattern() // デバッグ用
 {
     int i = 0;
     for (i = 0; i < commands_lists.size(); i++) {
@@ -23,7 +23,29 @@ void EasterEggHandler::_convertListToStrPattern()
         }
     }
     _strPattern[i] = L'\0';
-    //_calcManager.SetPrimaryDisplay(_strPattern, true); // debug用
+    _calcManager.SetPrimaryDisplay(_strPattern, true); // debug用
+}
+
+wchar_t EasterEggHandler::_convertCommandToWchar(Command& command){
+    wchar_t targetChar = _commandToWCharMap[command];
+    if(targetChar == L'\0'){
+        targetChar = L'?';
+    }
+
+    return targetChar;
+}
+
+void EasterEggHandler::_appendCommand(Command& command) {
+    commands_lists.push_back(command);
+
+    wchar_t wchar = _convertCommandToWchar(command);
+    _strPattern += wchar;
+}
+
+void EasterEggHandler::_prepareForNext(){
+    commands_lists.clear();
+    _strPattern.clear();
+    _isFirstCommand = true;  // イースターエッグから抜けるときのボタンプレス(1コマンド)をスキップするため
 }
 
 bool EasterEggHandler::handle(Command& command)
@@ -33,14 +55,15 @@ bool EasterEggHandler::handle(Command& command)
         return false;
     }
 
-    commands_lists.push_back(command);
-    if(commands_lists.size() > 4){
-        _convertListToStrPattern();
-        if(wcsstr(_strPattern,L"404")){
-            _calcManager.SetPrimaryDisplay(L"Not Found",true);
-        }
-        commands_lists.clear();
-        _isFirstCommand = true; // イースターエッグから抜けるときのボタンプレス(1コマンド)をスキップするため
+    _appendCommand(command);
+
+    if(_strPattern == L"404"){
+        _calcManager.SetPrimaryDisplay(L"Not Found", true);
+        _prepareForNext();
+        return true;
+    }else if(_strPattern == L"/**/"){
+        _calcManager.SetPrimaryDisplay(L"Comment is not allowed", true);
+        _prepareForNext();
         return true;
     }
 
@@ -50,7 +73,7 @@ bool EasterEggHandler::handle(Command& command)
 EasterEggHandler::EasterEggHandler(CalculationManager::CalculatorManager& calcManager) :
     _calcManager(calcManager)
 {
-    _strPattern[0] = L'\0';
+    _strPattern.clear();
 }
 
     /* if (_currentVal == 404)
